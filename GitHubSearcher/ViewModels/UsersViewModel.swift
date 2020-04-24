@@ -15,6 +15,9 @@ class UsersViewModel{
     typealias UserDetailWebServiceComplitionHandler = (UserDetail?,Error?) -> Void
     typealias UserReposWebServiceComplitionHandler = ([ReposModel]?,Error?) -> Void
     
+    var fetchUsers : URLSessionDataTask?
+    var fetchReposCount : URLSessionDataTask?
+    
     func APICall(url: String ,complitionHandler : @escaping UserModelWebServiceComplition){
 
         guard let url = URL(string: url) else {
@@ -22,7 +25,7 @@ class UsersViewModel{
             return
         }
         
-        APIManager.shared.searchAPICall(url: url) { (userModel, error) in
+        fetchUsers = APIManager.shared.searchAPICall(url: url) { (userModel, error) in
             
             if error == nil && userModel != nil{
                 complitionHandler(userModel,nil)
@@ -30,6 +33,7 @@ class UsersViewModel{
                 complitionHandler(nil,error)
             }
         }
+        fetchUsers?.resume()
     }
     
     
@@ -40,7 +44,7 @@ class UsersViewModel{
             return
         }
         
-        APIManager.shared.userDetailApiCall(url: url) { (repos, error) in
+        fetchReposCount = APIManager.shared.userDetailApiCall(url: url) { (repos, error) in
             
             if error == nil && repos != nil{
                 
@@ -49,6 +53,7 @@ class UsersViewModel{
                 complitionHandler(nil,error) 
             }
         }
+        fetchReposCount?.resume()
     }
     
     

@@ -33,7 +33,8 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         DispatchQueue.global(qos: .background).async {
-            let formatedUrl = String(format: "%@\(String(describing: self.userName!))", ApiKeys().userReposCountUrl)
+            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName!).lowercased()
+            print(formatedUrl)
             self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
                 self.userDetail = Detail
                 DispatchQueue.main.async {
@@ -50,7 +51,7 @@ class DetailViewController: UIViewController {
         }
         
         DispatchQueue.global(qos: .background).async {
-            let formatedUrl = String(format: "%@\(self.userName!)/repos", ApiKeys().userReposUrl)
+            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName!).lowercased()
             print(formatedUrl)
             self.usersVM.userReposApiCall(url: formatedUrl) { (reposModel, error) in
                 self.userRepos = reposModel
@@ -99,7 +100,7 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource, UISea
         
         let data = self.userRepos![indexPath.row]
         let repoName = data.name
-        let formatedUrl = String(format: "%@\(self.userName!)/\(repoName)", ApiKeys().safariUrl)
+        let formatedUrl = (ApiKeys.safariUrl.rawValue + self.userName! + "/" + repoName).lowercased()
         showSafariVC(url: formatedUrl)
 
     }

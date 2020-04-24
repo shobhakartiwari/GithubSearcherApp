@@ -17,9 +17,9 @@ class APIManager {
     typealias UserDetailWebServiceComplitionHandler = (UserDetail?,Error?) -> Void
     typealias UserReposWebServiceComplitionHandler = ([ReposModel]?,Error?) -> Void
    
-    func searchAPICall(url : URL, complitionHandler: @escaping UserModelWebServiceComplitionHandler){
+    func searchAPICall(url : URL, complitionHandler: @escaping UserModelWebServiceComplitionHandler) -> URLSessionDataTask{
         
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             if error == nil && data != nil{
                 
@@ -36,14 +36,15 @@ class APIManager {
                 complitionHandler(nil,error)
                 print(error!)
             }
-        }.resume()
+        }
+        return task
     }
     
     
     
-    func userDetailApiCall(url: URL, complitionHandler : @escaping UserDetailWebServiceComplitionHandler){
+    func userDetailApiCall(url: URL, complitionHandler : @escaping UserDetailWebServiceComplitionHandler) -> URLSessionDataTask{
         
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             if error == nil && data != nil{
                 
@@ -61,7 +62,8 @@ class APIManager {
                 print(error!)
                 complitionHandler(nil,error)
             }
-        }.resume()        
+        }
+        return task
     }
     
     

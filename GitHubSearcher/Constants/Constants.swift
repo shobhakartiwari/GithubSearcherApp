@@ -8,10 +8,12 @@
 
 import Foundation
 
-struct ApiKeys {
+enum ApiKeys : String {
     
-    let searchEnd = "https://api.github.com/search/users?q="
-    let userReposCountUrl = "https://api.github.com/users/"
-    let userReposUrl = "https://api.github.com/users/"
-    let safariUrl = "https://github.com/"
+    case searchEnd = "https://api.github.com/search/users?q="
+//    case userReposCountUrl = "https://api.github.com/users/"
+    case userReposUrl = "https://api.github.com/users/"
+    case safariUrl = "https://github.com/"
 }
+
+

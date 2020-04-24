@@ -17,45 +17,47 @@ class ViewController: UIViewController {
     
     var userModel : UsersModel?
     let usersVM = UsersViewModel()
-    var isSearching = false
-    
+  
+    var timer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Github Searcher"
-    
+        
     }
 }
 
 
 extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
     
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        timer.invalidate()
         
         if searchBar.text == "" || searchBar.text == " "{
             
-            isSearching = false
             self.userModel = nil
             self.myTableView.reloadData()
+            
         }else{
-            
-            isSearching = true
-       
-            let formatedSrting = String(format: "%@\(searchText)", ApiKeys().searchEnd).lowercased()
-            print(formatedSrting)
-            
-            DispatchQueue.global(qos: .background).async {
-                self.usersVM.APICall(url: formatedSrting) { (model, error) in
-                    if error == nil && model != nil{
-                        self.userModel = model
-                        DispatchQueue.main.async {
-                            self.myTableView.reloadData()
+            timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
+                self.usersVM.fetchUsers?.cancel()
+                self.usersVM.fetchReposCount?.cancel()
+                self.userModel = nil
+                
+                let trimed = searchText.replacingOccurrences(of: " ", with: "+")
+                let formatedSrting = (ApiKeys.searchEnd.rawValue + trimed).lowercased()
+                DispatchQueue.global(qos: .background).async {
+                    self.usersVM.APICall(url: formatedSrting) { (model, error) in
+                        if error == nil && model != nil{
+                            self.userModel = model
+                            DispatchQueue.main.async {
+                                self.myTableView.reloadData()
+                            }
                         }
                     }
                 }
-            }
+            })
         }
     }
     
@@ -81,8 +83,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
             cell.avatarImageView.image = UIImage().urlToData(url: imageUrl!)
             cell.nameLabel.text = data.userName
             
-            let formatedUrl = String(format: "%@\(data.userName)", ApiKeys().userReposCountUrl).lowercased()
-            
+            let formatedUrl = (ApiKeys.userReposUrl.rawValue + data.userName).lowercased()
             DispatchQueue.global(qos: .background).async {
                 self.usersVM.userDetailApiCall(url: formatedUrl) { (repos, error) in
                     if error == nil && repos != nil{
