@@ -51,7 +51,7 @@ class DetailViewController: UIViewController {
         }
         
         DispatchQueue.global(qos: .background).async {
-            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName!).lowercased()
+            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
             print(formatedUrl)
             self.usersVM.userReposApiCall(url: formatedUrl) { (reposModel, error) in
                 self.userRepos = reposModel

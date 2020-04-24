@@ -70,12 +70,17 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
+        
+        
+        cell.alpha = 0
+        
+        UIView.animate(withDuration: 1, animations: {cell.alpha = 1})
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? CustomTableViewCell else {return UITableViewCell()}
-        
-        
         if userModel != nil{
             let data = userModel!.items[indexPath.row]
             
