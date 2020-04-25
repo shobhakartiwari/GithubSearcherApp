@@ -32,32 +32,28 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.global(qos: .background).async {
-            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName!).lowercased()
-            print(formatedUrl)
-            self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
-                self.userDetail = Detail
-                DispatchQueue.main.async {
-                    guard let imageUrl = URL(string: (self.userDetail?.avatar) ?? "nil") else {return}
-                    self.avatarImageView.image = UIImage().urlToData(url: imageUrl)
-                    self.userNameLabel.text = self.userDetail?.name ?? self.userName
-                    self.bioLabel.text = self.userDetail?.bio ?? "No biography on this user"
-                    self.emailLabel.text = self.userDetail?.email ?? "Nil Email"
-                    self.followersLabel.text = "Followers: \(String(describing: self.userDetail?.followers ?? 0))"
-                    self.followingLabel.text = "Following: \(String(describing: self.userDetail?.following ?? 0))"
-                    self.locationLabel.text = self.userDetail?.location ?? "Nil Location"
-                }
+        let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName!).lowercased()
+        print(formatedUrl)
+        self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
+            self.userDetail = Detail
+            DispatchQueue.main.async {
+                guard let imageUrl = URL(string: (self.userDetail?.avatar) ?? "nil") else {return}
+                self.avatarImageView.image = UIImage().urlToData(url: imageUrl)
+                self.userNameLabel.text = self.userDetail?.name ?? self.userName
+                self.bioLabel.text = self.userDetail?.bio ?? "No biography on this user"
+                self.emailLabel.text = self.userDetail?.email ?? "Nil Email"
+                self.followersLabel.text = "Followers: \(String(describing: self.userDetail?.followers ?? 0))"
+                self.followingLabel.text = "Following: \(String(describing: self.userDetail?.following ?? 0))"
+                self.locationLabel.text = self.userDetail?.location ?? "Nil Location"
             }
         }
         
-        DispatchQueue.global(qos: .background).async {
-            let formatedUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
-            print(formatedUrl)
-            self.usersVM.userReposApiCall(url: formatedUrl) { (reposModel, error) in
-                self.userRepos = reposModel
-                DispatchQueue.main.async {
-                    self.myTableView.reloadData()
-                }
+        let stringUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
+        print(formatedUrl)
+        self.usersVM.userReposApiCall(url: stringUrl) { (reposModel, error) in
+            self.userRepos = reposModel
+            DispatchQueue.main.async {
+                self.myTableView.reloadData()
             }
         }
     }
@@ -76,7 +72,7 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource, UISea
         }
     }
     
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCustomTableViewCell else {return UITableViewCell()}
@@ -102,7 +98,7 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource, UISea
         let repoName = data.name
         let formatedUrl = (ApiKeys.safariUrl.rawValue + self.userName! + "/" + repoName).lowercased()
         showSafariVC(url: formatedUrl)
-
+        
     }
     
     

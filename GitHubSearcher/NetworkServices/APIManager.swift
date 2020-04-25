@@ -16,7 +16,7 @@ class APIManager {
     typealias UserModelWebServiceComplitionHandler = (UsersModel?,Error?) -> Void
     typealias UserDetailWebServiceComplitionHandler = (UserDetail?,Error?) -> Void
     typealias UserReposWebServiceComplitionHandler = ([ReposModel]?,Error?) -> Void
-   
+    
     func searchAPICall(url : URL, complitionHandler: @escaping UserModelWebServiceComplitionHandler) -> URLSessionDataTask{
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
