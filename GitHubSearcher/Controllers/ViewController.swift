@@ -24,41 +24,15 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Github Searcher"
+        
+        myTableView.rowHeight = 130
     }
 }
 
 
-extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
+
+extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.usersVM.fetchUsers?.cancel()
-        timer.invalidate()
-        self.userModel = []
-        self.usersVM.currentPage = 1
-        self.usersVM.limit = 30
-        
-        if searchBar.text == "" || searchBar.text == " "{
-            self.userModel = []
-            self.myTableView.reloadData()
-            
-        }else{
-            timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
-                
-                let trimed = searchText.replacingOccurrences(of: " ", with: "+")
-                self.mySearchText = trimed
-                let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(trimed)\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
-                
-                self.usersVM.APICall(url: formatedSrting) { (model, error) in
-                    if error == nil && model != nil{
-                        self.userModel = model!
-                        DispatchQueue.main.async {
-                            self.myTableView.reloadData()
-                        }
-                    }
-                }
-            })
-        }
-    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -78,7 +52,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
             self.usersVM.limit += 30
             self.usersVM.currentPage += 1
         
-            let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(self.mySearchText)x\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
+            let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(self.mySearchText)\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
 
             self.usersVM.APICall(url: formatedSrting) { (model, error) in
                 if error == nil && model != nil{
@@ -89,8 +63,6 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
                 }
             }
         }
-        cell.alpha = 0
-        UIView.animate(withDuration: 1, animations: {cell.alpha = 1})
     }
     
     
@@ -102,8 +74,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
         if userModel.count > 0{
             let data = userModel[indexPath.row]
             
-            let imageUrl = URL(string: data.avatar)
-            cell.avatarImageView.image = UIImage().urlToData(url: imageUrl!)
+            cell.avatarImageView.getImage(url: data.avatar)
             cell.nameLabel.text = data.userName
             
             let formatedUrl = (ApiKeys.userReposUrl.rawValue + data.userName).lowercased()
@@ -134,4 +105,40 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource, UISearchB
         navigationController?.pushViewController(vc, animated: true)
     }
     
+}
+
+
+
+extension ViewController: UISearchBarDelegate{
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.usersVM.fetchUsers?.cancel()
+        timer.invalidate()
+        self.userModel = []
+        self.usersVM.currentPage = 1
+        self.usersVM.limit = 30
+        
+        if searchBar.text == "" || searchBar.text == " "{
+            self.userModel = []
+            self.myTableView.reloadData()
+            
+        }else{
+            timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
+                
+                let trimed = searchText.replacingOccurrences(of: " ", with: "+")
+                self.mySearchText = trimed
+                let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(trimed)\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
+                
+                self.usersVM.APICall(url: formatedSrting) { (model, error) in
+                    if error == nil && model != nil{
+                        self.userModel = model!
+                        DispatchQueue.main.async {
+                            self.myTableView.reloadData()
+                        }
+                    }
+                }
+            })
+        }
+    }
 }

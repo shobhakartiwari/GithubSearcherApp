@@ -11,10 +11,10 @@ import Foundation
 
 class UsersViewModel{
     
-    typealias UserModelWebServiceComplition = ([UserItems]?,Error?) -> Void
-    typealias UserDetailWebServiceComplitionHandler = (UserDetail?,Error?) -> Void
-    typealias UserReposWebServiceComplitionHandler = ([ReposModel]?,Error?) -> Void
-    typealias UserRepoSearchWebServiceComplitionHandler = ([Items]?,Error?) -> Void
+    typealias UserModelWebServiceCompletion = ([UserItems]?,Error?) -> Void
+    typealias UserDetailWebServiceCompletionHandler = (UserDetail?,Error?) -> Void
+    typealias UserReposWebServiceCompletionHandler = ([ReposModel]?,Error?) -> Void
+    typealias UserRepoSearchWebServiceCompletionHandler = ([Items]?,Error?) -> Void
     
     var currentPage = 1
     var limit = 30
@@ -25,7 +25,7 @@ class UsersViewModel{
     var fetchRepos : URLSessionDataTask?
     
     
-    func APICall(url: String ,complitionHandler : @escaping UserModelWebServiceComplition){
+    func APICall(url: String ,completionHandler : @escaping UserModelWebServiceCompletion){
 
         guard let url = URL(string: url) else {
             print("Error with URL !!")
@@ -35,9 +35,9 @@ class UsersViewModel{
         fetchUsers = APIManager.shared.searchAPICall(url: url) { (item, error) in
             
             if error == nil && item != nil{
-                complitionHandler(item,nil)
+                completionHandler(item,nil)
             }else{
-                complitionHandler(nil,error)
+                completionHandler(nil,error)
             }
         }
         fetchUsers?.resume()
@@ -45,7 +45,7 @@ class UsersViewModel{
     
     
     
-    func userDetailApiCall(url : String, complitionHandler : @escaping UserDetailWebServiceComplitionHandler){
+    func userDetailApiCall(url : String, completionHandler : @escaping UserDetailWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
             print("Error with URL !!")
@@ -56,9 +56,9 @@ class UsersViewModel{
             
             if error == nil && repos != nil{
                 
-                complitionHandler(repos,nil)
+                completionHandler(repos,nil)
             }else {
-                complitionHandler(nil,error) 
+                completionHandler(nil,error)
             }
         }
         fetchReposCount?.resume()
@@ -66,7 +66,7 @@ class UsersViewModel{
     
     
     
-    func userReposApiCall(url: String, complitionHandler : @escaping UserReposWebServiceComplitionHandler){
+    func userReposApiCall(url: String, completionHandler : @escaping UserReposWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
             print("Error with URL !!")
@@ -76,9 +76,9 @@ class UsersViewModel{
         APIManager.shared.reposApiCall(url: url) { (repos, error) in
             
             if error == nil && repos != nil {
-                complitionHandler(repos,nil)
+                completionHandler(repos,nil)
             }else{
-                complitionHandler(nil,error)
+                completionHandler(nil,error)
             }
         }
         fetchRepos?.resume()
@@ -86,18 +86,18 @@ class UsersViewModel{
     
     
     
-    func userReposSearchApiCall(url: String, complitionHandler: @escaping UserRepoSearchWebServiceComplitionHandler){
+    func userReposSearchApiCall(url: String, completionHandler: @escaping UserRepoSearchWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
             print("Error with URL !!")
             return
         }
         
-        fetchRepos = APIManager.shared.searchRepoApiCall(url: url, complitionHandler: { (model, error) in
+        fetchRepos = APIManager.shared.searchRepoApiCall(url: url, completionHandler: { (model, error) in
             if error == nil && model != nil{
-                complitionHandler(model,nil)
+                completionHandler(model,nil)
             }else{
-                complitionHandler(nil,error)
+                completionHandler(nil,error)
             }
         })
         fetchRepos?.resume()

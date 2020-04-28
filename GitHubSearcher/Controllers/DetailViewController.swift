@@ -40,8 +40,11 @@ class DetailViewController: UIViewController {
         self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
             self.userDetail = Detail
             DispatchQueue.main.async {
-                guard let imageUrl = URL(string: (self.userDetail?.avatar) ?? "nil") else {return}
-                self.avatarImageView.image = UIImage().urlToData(url: imageUrl)
+                
+                if self.userDetail?.avatar != nil{
+                  self.avatarImageView.getImage(url: (self.userDetail?.avatar)!)
+                }
+                
                 self.userNameLabel.text = self.userDetail?.name ?? self.userName
                 self.bioLabel.text = self.userDetail?.bio ?? "No biography on this user"
                 self.emailLabel.text = self.userDetail?.email ?? "Nil Email"
@@ -52,7 +55,6 @@ class DetailViewController: UIViewController {
         }
         
         let stringUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
-        print(formatedUrl)
         self.usersVM.userReposApiCall(url: stringUrl) { (reposModel, error) in
             self.userRepos = reposModel
             DispatchQueue.main.async {
@@ -85,6 +87,18 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         
+        if indexPath.row == usersVM.limit - 1{
+            self.usersVM.limit += 30
+            self.usersVM.currentPage += 1
+            
+            let stringUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
+            self.usersVM.userReposApiCall(url: stringUrl) { (reposModel, error) in
+                self.userRepos = reposModel
+                DispatchQueue.main.async {
+                    self.myTableView.reloadData()
+                }
+            }
+        }
     }
     
     

@@ -9,17 +9,24 @@
 import UIKit
 
 
-
-extension UIImage{
+extension UIImageView {
     
-    func urlToData(url : URL) -> UIImage?{
+    func getImage(url: String){
         
-        do{
-            let imageData = try Data(contentsOf: url)
-            let image = UIImage(data: imageData)
-            return image
-        }catch{
-            return UIImage()
-        }
+        guard let myUrl = URL(string: url) else {return}
+        
+        URLSession.shared.dataTask(with: myUrl) { (data, response, error) in
+            
+            if error == nil && data != nil {
+                
+                let image = UIImage(data: data!)
+                
+                DispatchQueue.main.async {
+                    
+                    self.image = image
+                }
+            }
+        
+        }.resume()
     }
 }
