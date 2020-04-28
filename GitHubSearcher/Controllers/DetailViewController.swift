@@ -11,6 +11,7 @@ import SafariServices
 
 class DetailViewController: UIViewController {
     
+    
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
@@ -25,9 +26,11 @@ class DetailViewController: UIViewController {
     var userDetail : UserDetail?
     var userRepos : [ReposModel]?
     var usersVM = UsersViewModel()
+    var searchedRepos : [Items] = []
     var isSearching = false
     var userName : String?
     
+    var timer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,34 +64,65 @@ class DetailViewController: UIViewController {
 
 
 
-extension DetailViewController: UITableViewDelegate,UITableViewDataSource, UISearchBarDelegate{
+extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
+    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.userRepos != nil{
-            return self.userRepos!.count
+        
+        if isSearching{
+            return self.searchedRepos.count
         }else{
-            return 0
+            if self.userRepos != nil{
+                return self.userRepos!.count
+            }else{
+                return 0
+            }
         }
     }
+    
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
+        
+    }
+    
+    
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCustomTableViewCell else {return UITableViewCell()}
-        
-        if self.userRepos != nil{
-            let data = self.userRepos![indexPath.row]
+        if isSearching{
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCustomTableViewCell else {return UITableViewCell()}
             
-            cell.reposNameLabel.text = data.name
-            cell.forksLabel.text = "Forks :\(data.forks)"
-            cell.starsLabel.text = "Stars :\(data.stars)"
-            
-            return cell
+            if self.searchedRepos.count > 0{
+                let data = self.searchedRepos[indexPath.row]
+                
+                cell.reposNameLabel.text = data.name
+                cell.forksLabel.text = "Forks :\(data.forks)"
+                cell.starsLabel.text = "Stars :\(data.stars)"
+                
+                return cell
+            }else{
+                return cell
+            }
         }else{
-            return cell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCustomTableViewCell else {return UITableViewCell()}
+            
+            if self.userRepos != nil{
+                let data = self.userRepos![indexPath.row]
+                
+                cell.reposNameLabel.text = data.name
+                cell.forksLabel.text = "Forks :\(data.forks)"
+                cell.starsLabel.text = "Stars :\(data.stars)"
+                
+                return cell
+            }else{
+                return cell
+            }
         }
     }
+    
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
@@ -107,5 +141,44 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource, UISea
         guard let url = URL(string: url) else {return}
         let safariVC = SFSafariViewController(url: url)
         present(safariVC, animated: true)
+    }
+}
+
+
+extension DetailViewController : UISearchBarDelegate{
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.usersVM.fetchRepos?.cancel()
+        timer.invalidate()
+        self.searchedRepos = []
+        self.usersVM.currentPage = 1
+        self.usersVM.limit = 30
+        
+        if searchText == "" || searchText == " "{
+            self.isSearching = false
+            self.searchedRepos = []
+            self.myTableView.reloadData()
+            
+        }else{
+            isSearching = true
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
+                let trimmedUserName = self.userName?.replacingOccurrences(of: " ", with: "+")
+                let trimmedRepo = searchText.replacingOccurrences(of: " ", with: "+")
+                
+                let urlString = "\(ApiKeys.userReposSearch.rawValue)\(trimmedRepo)+user:\(String(describing: trimmedUserName!))\(Queries.page.rawValue)\(self.usersVM.currentPage)"
+
+                self.usersVM.userReposSearchApiCall(url: urlString) { (model, error) in
+                    
+                    if error == nil && model != nil{
+                        self.searchedRepos = model!
+                        DispatchQueue.main.async {
+                            self.myTableView.reloadData()
+                        }
+                    }
+                }
+            })
+        }
     }
 }

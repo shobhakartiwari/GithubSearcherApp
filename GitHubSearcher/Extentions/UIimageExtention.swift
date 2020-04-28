@@ -21,6 +21,5 @@ extension UIImage{
         }catch{
             return UIImage()
         }
-        
     }
 }

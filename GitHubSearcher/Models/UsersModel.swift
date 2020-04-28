@@ -9,11 +9,11 @@
 import Foundation
 
 struct UsersModel : Codable {
-    var items : [Items]
+    var items : [UserItems]
 }
 
 
-struct Items : Codable{
+struct UserItems : Codable{
     var userName : String
     var avatar : String
     
@@ -22,6 +22,8 @@ struct Items : Codable{
         case avatar = "avatar_url"
     }
 }
+
+
 
 
 struct UserDetail : Codable{
@@ -50,8 +52,30 @@ struct UserDetail : Codable{
 }
 
 
+
+
 struct ReposModel : Codable{
     
+    var name : String
+    var stars : Int
+    var forks : Int
+    
+    private enum CodingKeys : String, CodingKey{
+        case name = "name"
+        case stars = "stargazers_count"
+        case forks  = "forks_count"
+    }
+}
+
+
+
+
+
+struct RepoSearchModel : Codable{
+    var items : [Items]
+}
+
+struct Items : Codable{
     var name : String
     var stars : Int
     var forks : Int
