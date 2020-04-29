@@ -24,7 +24,7 @@ class UsersViewModel{
     var fetchReposCount : URLSessionDataTask?
     var fetchRepos : URLSessionDataTask?
     
-    
+    // MARK: - function for executing fetch users api call
     func APICall(url: String ,completionHandler : @escaping UserModelWebServiceCompletion){
 
         guard let url = URL(string: url) else {
@@ -44,7 +44,7 @@ class UsersViewModel{
     }
     
     
-    
+    // MARK: - function for executing fetch user detail api call
     func userDetailApiCall(url : String, completionHandler : @escaping UserDetailWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
@@ -65,7 +65,7 @@ class UsersViewModel{
     }
     
     
-    
+    // MARK: - function for executing fetch users repos count api call
     func userReposApiCall(url: String, completionHandler : @escaping UserReposWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
@@ -85,7 +85,7 @@ class UsersViewModel{
     }
     
     
-    
+    // MARK: - function for executing the user repo search api call
     func userReposSearchApiCall(url: String, completionHandler: @escaping UserRepoSearchWebServiceCompletionHandler){
         
         guard let url = URL(string: url) else {
@@ -102,5 +102,4 @@ class UsersViewModel{
         })
         fetchRepos?.resume()
     }
-    
 }

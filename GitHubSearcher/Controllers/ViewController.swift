@@ -53,7 +53,8 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
             self.usersVM.currentPage += 1
         
             let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(self.mySearchText)\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
-
+            
+            //MARK: - fetching the users list to be displayed in table view
             self.usersVM.APICall(url: formatedSrting) { (model, error) in
                 if error == nil && model != nil{
                     self.userModel.append(contentsOf: model!)
@@ -74,11 +75,13 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         if userModel.count > 0{
             let data = userModel[indexPath.row]
             
+            // UIImageView extension to load the images from data
             cell.avatarImageView.getImage(url: data.avatar)
             cell.nameLabel.text = data.userName
             
             let formatedUrl = (ApiKeys.userReposUrl.rawValue + data.userName).lowercased()
             
+            //MARK: - calling the user detail api to fetch the user repo count
             self.usersVM.userDetailApiCall(url: formatedUrl) { (repos, error) in
                 if error == nil && repos != nil{
                     DispatchQueue.main.async {
@@ -113,6 +116,7 @@ extension ViewController: UISearchBarDelegate{
     
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // cancel the previous api call to stop invoking the api while editing the search bar
         self.usersVM.fetchUsers?.cancel()
         timer.invalidate()
         self.userModel = []
@@ -124,12 +128,12 @@ extension ViewController: UISearchBarDelegate{
             self.myTableView.reloadData()
             
         }else{
+            // adding timer to prevent frequent reloading
             timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
                 
                 let trimed = searchText.replacingOccurrences(of: " ", with: "+")
                 self.mySearchText = trimed
                 let formatedSrting = ("\(ApiKeys.searchEnd.rawValue)\(trimed)\(Queries.page.rawValue)\(self.usersVM.currentPage)").lowercased()
-                
                 self.usersVM.APICall(url: formatedSrting) { (model, error) in
                     if error == nil && model != nil{
                         self.userModel = model!

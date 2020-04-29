@@ -8,6 +8,7 @@
 
 import Foundation
 
+//MARK: - Users list model
 struct UsersModel : Codable {
     var items : [UserItems]
 }
@@ -24,8 +25,7 @@ struct UserItems : Codable{
 }
 
 
-
-
+//MARK: - User detail model
 struct UserDetail : Codable{
     
     var name : String?
@@ -53,7 +53,7 @@ struct UserDetail : Codable{
 
 
 
-
+//MARK: - User repos Model
 struct ReposModel : Codable{
     
     var name : String
@@ -70,7 +70,7 @@ struct ReposModel : Codable{
 
 
 
-
+//MARK: - User repo search model
 struct RepoSearchModel : Codable{
     var items : [Items]
 }
