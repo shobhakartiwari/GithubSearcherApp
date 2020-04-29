@@ -42,7 +42,6 @@ class DetailViewController: UIViewController {
         self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
             self.userDetail = Detail
             DispatchQueue.main.async {
-                
                 if self.userDetail?.avatar != nil{
                   self.avatarImageView.getImage(url: (self.userDetail?.avatar)!)
                 }
@@ -90,7 +89,6 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
-  
         if indexPath.row == usersVM.limit - 1{
             self.usersVM.limit += 30
             self.usersVM.currentPage += 1

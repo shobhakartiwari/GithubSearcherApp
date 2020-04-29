@@ -9,7 +9,7 @@
 import Foundation
 
 enum Token : String{
-    case tokenKey = "faef3c826dbb4bb4af828d185bf1d52a60603d30"
+    case tokenKey = "54365d2d15a349b65f6258c55bfcde290f00ca89"
 }
 
 
@@ -75,8 +75,8 @@ class APIManager {
             if error == nil && data != nil{
                 
                 do{
-                    let repos = try JSONDecoder().decode(UserDetail.self, from: data!)
-                    completionHandler(repos,nil)
+                    let userDetail = try JSONDecoder().decode(UserDetail.self, from: data!)
+                    completionHandler(userDetail,nil)
                 }catch{
                     completionHandler(nil,error)
                 }

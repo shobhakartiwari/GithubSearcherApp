@@ -9,14 +9,15 @@
 import Foundation
 
 //MARK: - Users list model
-struct UsersModel : Codable {
+class UsersModel : Codable {
     var items : [UserItems]
 }
 
 
-struct UserItems : Codable{
+class UserItems : Codable{
     var userName : String
     var avatar : String
+    var userDetail : UserDetail?
     
     private enum CodingKeys : String, CodingKey{
         case userName = "login"
@@ -26,7 +27,7 @@ struct UserItems : Codable{
 
 
 //MARK: - User detail model
-struct UserDetail : Codable{
+class UserDetail : Codable{
     
     var name : String?
     var avatar : String?

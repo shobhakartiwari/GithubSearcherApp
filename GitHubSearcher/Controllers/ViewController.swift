@@ -24,8 +24,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Github Searcher"
-        
-        myTableView.rowHeight = 130
     }
 }
 
@@ -37,12 +35,44 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if userModel.count > 0{
-            return userModel.count
-        }else{
-            return 0
-        }
+        return userModel.count
     }
+    
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? CustomTableViewCell else {return UITableViewCell()}
+        
+        if userModel.count > 0{
+            let data = userModel[indexPath.row]
+            
+            // UIImageView extension to load the images from data
+            cell.avatarImageView.getImage(url: data.avatar)
+            cell.nameLabel.text = data.userName
+            
+            let formatedUrl = (ApiKeys.userReposUrl.rawValue + data.userName).lowercased()
+            
+            if data.userDetail == nil{
+                //MARK: - calling the user detail api to fetch the user repo count
+                self.usersVM.userDetailApiCall(url: formatedUrl) { (userDetail, error) in
+                    if error == nil && userDetail != nil{
+                        DispatchQueue.main.async {
+                            cell.repoLabel.text = "Repos: \(userDetail?.repos ?? 0)"
+                            data.userDetail = userDetail
+                        }
+                    }
+                }
+            }else{
+                cell.repoLabel.text = "Repos: \(data.userDetail?.repos ?? 0)"
+            }
+            
+        }else{
+            return cell
+        }
+        return cell
+    }
+    
     
     
     
@@ -63,37 +93,6 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
-        }
-    }
-    
-    
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? CustomTableViewCell else {return UITableViewCell()}
-        
-        if userModel.count > 0{
-            let data = userModel[indexPath.row]
-            
-            // UIImageView extension to load the images from data
-            cell.avatarImageView.getImage(url: data.avatar)
-            cell.nameLabel.text = data.userName
-            
-            let formatedUrl = (ApiKeys.userReposUrl.rawValue + data.userName).lowercased()
-            
-            //MARK: - calling the user detail api to fetch the user repo count
-            self.usersVM.userDetailApiCall(url: formatedUrl) { (repos, error) in
-                if error == nil && repos != nil{
-                    DispatchQueue.main.async {
-                        cell.repoLabel.text = "Repos: \(repos?.repos ?? 0)"
-                        
-                    }
-                }
-            }
-            
-            return cell
-        }else{
-            return cell
         }
     }
     
