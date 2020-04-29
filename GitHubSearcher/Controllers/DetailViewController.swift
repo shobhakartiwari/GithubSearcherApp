@@ -190,17 +190,23 @@ extension DetailViewController : UISearchBarDelegate{
                 let trimmedRepo = searchText.replacingOccurrences(of: " ", with: "+")
                 
                 let urlString = "\(ApiKeys.userReposSearch.rawValue)\(trimmedRepo)+user:\(String(describing: trimmedUserName!))\(Queries.page.rawValue)\(self.usersVM.currentPage)"
-
+                //MARK: - fetching the searched repos api call
                 self.usersVM.userReposSearchApiCall(url: urlString) { (model, error) in
                     
                     if error == nil && model != nil{
                         self.searchedRepos = model!
                         DispatchQueue.main.async {
                             self.myTableView.reloadData()
+                            
                         }
                     }
                 }
             })
         }
+    }
+    
+    //MARK: - resign the key board when search button pressed
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
+        searchBar.searchTextField.resignFirstResponder()
     }
 }

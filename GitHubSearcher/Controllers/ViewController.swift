@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     @IBOutlet weak var searchBarController: UISearchBar!
@@ -24,6 +24,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Github Searcher"
+    
     }
 }
 
@@ -90,6 +91,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
                     self.userModel.append(contentsOf: model!)
                     DispatchQueue.main.async {
                         self.myTableView.reloadData()
+                        
                     }
                 }
             }
@@ -125,7 +127,7 @@ extension ViewController: UISearchBarDelegate{
         if searchBar.text == "" || searchBar.text == " "{
             self.userModel = []
             self.myTableView.reloadData()
-            
+    
         }else{
             // adding timer to prevent frequent reloading
             timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: { (_) in
@@ -138,10 +140,16 @@ extension ViewController: UISearchBarDelegate{
                         self.userModel = model!
                         DispatchQueue.main.async {
                             self.myTableView.reloadData()
+                           
                         }
                     }
                 }
             })
         }
+    }
+    
+    //MARK: - resign the key board when search button pressed
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
+        searchBar.searchTextField.resignFirstResponder()
     }
 }

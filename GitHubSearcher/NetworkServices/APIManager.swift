@@ -9,7 +9,7 @@
 import Foundation
 
 enum Token : String{
-    case tokenKey = "4d9f1ec0b0fe0c14e37ff6ca32ebf85974eba5ac"
+    case tokenKey = "f5b83873d7588a9972aa42e3a4b72e0aa6cae04b"
 }
 
 
@@ -26,7 +26,7 @@ class APIManager {
     var userModelArray : [UserItems]?
     var repoModelArray : [Items]?
     
-    // Web service for fetching users and their avatars
+    //MARK:- Web service for fetching users and their avatars
     func searchAPICall(url : URL, completionHandler: @escaping UserModelWebServiceCompletionHandler) -> URLSessionDataTask{
         
         userModelArray = nil
@@ -60,7 +60,7 @@ class APIManager {
     }
     
     
-    /** Web service for fetching a single user detail and for repos count to be displayed in view controller table view**/
+    //MARK: -Web service for fetching a single user detail and for repos count to be displayed in view controller table view
     func userDetailApiCall(url: URL, completionHandler : @escaping UserDetailWebServiceCompletionHandler) -> URLSessionDataTask{
         
         
@@ -88,7 +88,7 @@ class APIManager {
     }
     
     
-    // Web service for fetching the user repos to be displayed in the Detail View Controller
+    //MARK:- Web service for fetching the user repos to be displayed in the Detail View Controller
     func reposApiCall(url : URL, completionHandler : @escaping UserReposWebServiceCompletionHandler){
         
         
@@ -116,7 +116,7 @@ class APIManager {
     }
     
     
-    // Web service is called when searching for the user repos
+    //MARK:- Web service is called when searching for the user repos
     func searchRepoApiCall(url: URL, completionHandler : @escaping  UserRepoSearchWebServiceCompletionHandler) -> URLSessionDataTask {
         
         self.repoModelArray = nil
