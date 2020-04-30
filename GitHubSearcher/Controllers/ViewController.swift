@@ -24,14 +24,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         
         title = "Github Searcher"
-    
     }
 }
 
 
 
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
-    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

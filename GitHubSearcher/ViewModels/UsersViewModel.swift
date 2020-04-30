@@ -19,7 +19,6 @@ class UsersViewModel{
     var currentPage = 1
     var limit = 30
     
-    
     var fetchUsers : URLSessionDataTask?
     var fetchReposCount : URLSessionDataTask?
     var fetchRepos : URLSessionDataTask?

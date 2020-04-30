@@ -86,8 +86,6 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
-    
-    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         if indexPath.row == usersVM.limit - 1{
             self.usersVM.limit += 30
