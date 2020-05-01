@@ -9,7 +9,7 @@
 import Foundation
 
 enum Token : String{
-    case tokenKey = "d2ace437e8e9a436f9b63c303e9edef0b800129f"
+    case tokenKey = "2078f085226c38c59deeb1956e97cf4be7d8f2f1"
 }
 
 

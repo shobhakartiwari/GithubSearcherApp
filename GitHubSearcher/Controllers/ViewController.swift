@@ -22,7 +22,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationController?.navigationBar.prefersLargeTitles = true
         title = "Github Searcher"
     }
 }

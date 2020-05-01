@@ -26,7 +26,6 @@ extension UIImageView {
                     self.image = image
                 }
             }
-        
         }.resume()
     }
 }
