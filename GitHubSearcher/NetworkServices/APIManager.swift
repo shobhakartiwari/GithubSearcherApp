@@ -38,7 +38,6 @@ class APIManager {
         
         let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             
-            
             if error == nil && data != nil{
                 
                 do{
