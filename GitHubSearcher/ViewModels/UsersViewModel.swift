@@ -23,6 +23,15 @@ class UsersViewModel{
     var fetchReposCount : URLSessionDataTask?
     var fetchRepos : URLSessionDataTask?
     
+    
+    func clear(){
+        
+        currentPage = 1
+        limit = 30
+        
+    }
+    
+    
     // MARK: - function for executing fetch users api call
     func APICall(url: String ,completionHandler : @escaping UserModelWebServiceCompletion){
 

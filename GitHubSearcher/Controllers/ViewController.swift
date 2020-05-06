@@ -151,3 +151,11 @@ extension ViewController: UISearchBarDelegate{
         searchBar.searchTextField.resignFirstResponder()
     }
 }
+
+
+extension ViewController {
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.usersVM.clear()
+    }
+}

@@ -41,6 +41,7 @@ class DetailViewController: UIViewController {
         // MARK: - fetching user detail data call
         self.usersVM.userDetailApiCall(url: formatedUrl) { (Detail, error) in
             self.userDetail = Detail
+            
             DispatchQueue.main.async {
                 if self.userDetail?.avatar != nil{
                   self.avatarImageView.getImage(url: (self.userDetail?.avatar)!)
@@ -71,8 +72,7 @@ class DetailViewController: UIViewController {
 
 extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
     
-    
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if isSearching{
@@ -86,12 +86,14 @@ extension DetailViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         if indexPath.row == usersVM.limit - 1{
             self.usersVM.limit += 30
             self.usersVM.currentPage += 1
             
-            let stringUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue).lowercased()
+            let stringUrl = (ApiKeys.userReposUrl.rawValue + self.userName! + EndPionts.repos.rawValue + Queries.repoPage.rawValue +  String(self.usersVM.currentPage)).lowercased()
+            
             //MARK: - fetching the user repos to be paginated in the table view
             self.usersVM.userReposApiCall(url: stringUrl) { (reposModel, error) in
                 if error == nil && reposModel != nil{
@@ -206,5 +208,13 @@ extension DetailViewController : UISearchBarDelegate{
     //MARK: - resign the key board when search button pressed
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
         searchBar.searchTextField.resignFirstResponder()
+    }
+}
+
+
+extension DetailViewController {
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.usersVM.clear()
     }
 }

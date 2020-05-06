@@ -22,5 +22,6 @@ enum EndPionts : String{
 
 enum Queries : String{
     case page = "&page="
+    case repoPage = "?&page="
 }
 
