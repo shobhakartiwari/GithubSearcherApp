@@ -8,8 +8,9 @@
 
 import Foundation
 
+/// Addded updated token to make the application functional
 enum Token : String{
-    case tokenKey = "3cb1a25d83ee2333461763b54fb8303278921478"
+    case tokenKey = "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"
 }
 
 
