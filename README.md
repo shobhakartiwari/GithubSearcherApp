@@ -1,4 +1,4 @@
-# GithubSearcherApp
+# GithubSearcherApp          
 This app searches in Github users and their repos
 
 In order to make the app work you need to regenerate a new token
